@@ -1,0 +1,87 @@
+Step 1:Build a dataset
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+data = {
+    'student_name' : ['kronos', 'athena', 'hermes', 'wiltsburgh', 'thomas', 'sahir', 'johanna', 'wiltshire', 'charlotte', 'elizabeth', 'kai', 'cody', 'hamlet', 'rio', 'hamburg', 'carol', 'sunny', 'olivia', 'kiara', 'kevin'],
+    'study_hours' : [1,2,3,4,5,6,7,8,9,10,11,4,5,7,5,3,6,9,10,11],
+    'attendance_rate' : [60,65,70,71,55,90,91,99,55,78,98,76,45,98,65,44,67,55,90,59],
+    'passed' : [0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1]
+
+}
+
+df = pd.DataFrame(data)
+df['status'] = df['passed'].map({1: 'Passed', 0:'At Risk'})
+print(df[['student_name', 'study_hours', 'attendance_rate', "status"]])
+
+
+
+
+Step 2:Split
+
+x = df[['study_hours', 'attendance_rate']]
+y = df['passed']
+names = df['student_name']
+
+x_train, x_test, y_train, y_test, names_train, names_test = train_test_split(x, y, names, test_size=0.25, random_state=42)
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+data = {
+    'student_name' : ['kronos', 'athena', 'hermes', 'wiltsburgh', 'thomas', 'sahir', 'johanna', 'wiltshire', 'charlotte', 'elizabeth', 'kai', 'cody', 'hamlet', 'rio', 'hamburg', 'carol', 'sunny', 'olivia', 'kiara', 'kevin'],
+    'study_hours' : [1,2,3,4,5,6,7,8,9,10,11,4,5,7,5,3,6,9,10,11],
+    'attendance_rate' : [60,65,70,71,55,90,91,99,55,78,98,76,45,98,65,44,67,55,90,59],
+    'passed' : [0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1]
+
+}
+
+df = pd.DataFrame(data)
+df['status'] = df['passed'].map({1: 'Passed', 0:'At Risk'})
+print(df[['student_name', 'study_hours', 'attendance_rate', "status"]])
+ Group (model study this record")
+print(list(names_train))
+print("\n Testing group (model has never seen their outcome): ")
+print(list(names_test))
+
+
+
+
+Step 3:Train the model
+
+model = DecisionTreeClassifier(max_depth=3, random_state=42)
+model.fit(x_train, y_train)
+
+print("Model trained on", len(x_train), "students!")
+
+
+
+
+Step 4:Predict
+
+y_pred = model.predict(x_test)
+
+results = pd.DataFrame({
+    'student_names' : names_test.values,
+    'actual' : y_test.map({1: 'Passed', 0: 'At Risk'}).values,
+    'predicted' : pd.Series(y_pred).map({1: 'passed', 0: 'At Risk'}).values
+
+})
+
+print(results)
+
+
+
+
+Step 5:Model Accuracy
+
+acc = accuracy_score(y_test, y_pred)
+
+print("accuracy", round(acc*100, 2), "%")
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred, target_names=['at risk', 'passed']))
